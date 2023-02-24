@@ -1,52 +1,38 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-export const StyledRegisterPage = styled.main`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
+export const RegisterStyle = styled.main`
 
-  .formBox {
     display: flex;
-    flex-direction: column;
-    gap: 20px;
+    flex-direction: column-reverse;
+    gap: 1.5rem;
+    padding-top: 2rem;
+    width: 100%;
 
-    header {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      justify-content: space-between;
+    & > form > div{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
 
-      a {
-        font-family: ${({ theme }) => theme.fonts.primary};
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: ${({ theme }) => theme.colors.gray300};
-
-        white-space: nowrap;
-
-        &:hover {
-          text-decoration: underline;
+        h2{
+            font-size: var(--font-size-3);
+            font-weight: var(--weight-1);
+            color: var(--color-grey-600);
         }
-      }
-    }
-  }
 
-  .flexGrid {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 50px;
-
-    .left,
-    .right {
-      width: 100%;
+        a{
+            font-size: var(--font-size-6);
+            font-weight: var(--weight-3);
+            color: var(--color-grey-300);
+            text-decoration-line: underline;
+        }
     }
 
-    @media (max-width: 750px) {
-      .left {
-        display: none;
-      }
+    @media (min-width: 701px) {
+        flex-direction: row-reverse;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        padding-top: unset;
     }
-  }
-`;
+`

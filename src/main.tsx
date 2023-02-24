@@ -1,16 +1,18 @@
-import React from 'react';
-import { mainTheme } from './styles/theme';
-import { BrowserRouter } from 'react-router-dom';
-import ReactDOM from 'react-dom/client';
-import { ThemeProvider } from 'styled-components';
-import App from './App';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import App from './App'
+import { CartProvider } from './context/CartContext'
+import { UserProvider } from './context/UserContext'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
-      <ThemeProvider theme={mainTheme}>
-        <App />
-      </ThemeProvider>
+      <UserProvider>
+        <CartProvider>
+          <App />
+        </CartProvider>
+      </UserProvider>
     </BrowserRouter>
   </React.StrictMode>
-);
+)

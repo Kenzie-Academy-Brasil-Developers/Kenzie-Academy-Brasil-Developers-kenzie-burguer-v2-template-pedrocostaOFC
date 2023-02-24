@@ -1,39 +1,53 @@
-import { MdShoppingCart, MdLogout } from 'react-icons/md';
+import { useContext, useState } from "react";
+import { UserContext } from "../../context/UserContext";
+import { HeaderStyle } from "./style";
+import { ButtonStyle } from "../Button";
+import { CartContext } from "../../context/CartContext";
+import whiteSearch from "../../assets/whiteSearch.svg";
+import shoppingCart from "../../assets/shoppingCart.svg";
+import leave from "../../assets/leave.svg";
+import logo from "../../assets/logo-kenzie-burgue.png";
 
-import SearchForm from './SearchForm';
-import { StyledHeader } from './style';
-import LogoKenzieBurguer from '../../assets/LogoKenzieBurguer.svg';
+export const Header = () => {
+  const { leaveAccount } = useContext(UserContext);
 
-import { StyledContainer } from '../../styles/grid';
+  const { setSearchProduct, cartProducts, setCartModal } =
+    useContext(CartContext);
 
-const Header = () => (
-  <StyledHeader>
-    <StyledContainer containerWidth={1300}>
-      <div className='flexGrid'>
-        <img
-          src={LogoKenzieBurguer}
-          alt='Kenzie Burguer Logo'
-          className='logo'
-        />
-        <nav className='nav' role='navigation'>
-          <SearchForm />
-          <div className='buttons'>
-            <button
-              type='button'
-              onClick={() => {
-                console.log('Criar lógica');
-              }}
+  const [inputValue, setInputValue] = useState("");
+
+  const formSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSearchProduct(inputValue);
+  };
+
+  return (
+    <HeaderStyle>
+      <nav className="container">
+        <img src={logo} alt="" />
+        <div>
+          <form onSubmit={(e) => formSubmit(e)}>
+            <input
+              onChange={(e) => setInputValue(e.target.value)}
+              type="text"
+              placeholder="Digitar pesquisa"
+            />
+            <ButtonStyle
+              type="submit"
+              padding="smaller"
+              styledBtn="colorBrand"
+              width="fit"
             >
-              <MdShoppingCart size={28} />
-            </button>
-            <button type='button'>
-              <MdLogout size={28} />
-            </button>
+              <img src={whiteSearch} alt="Lupa de pesquisa" />
+            </ButtonStyle>
+          </form>
+          <div onClick={() => setCartModal(true)}>
+            <span>{cartProducts ? cartProducts.length : "0"}</span>
+            <img src={shoppingCart} alt="Carrinho de compras" />
           </div>
-        </nav>
-      </div>
-    </StyledContainer>
-  </StyledHeader>
-);
-
-export default Header;
+          <img onClick={leaveAccount} src={leave} alt="Deslogar do site" />
+        </div>
+      </nav>
+    </HeaderStyle>
+  );
+};

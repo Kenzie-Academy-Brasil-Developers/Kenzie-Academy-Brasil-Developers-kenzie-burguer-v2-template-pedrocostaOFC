@@ -1,11 +1,18 @@
-import Router from './routes';
-import { GlobalStyles } from './styles/global';
+import { ToastContainer } from "react-toastify";
+import { GlobalStyle } from "./styles/globalStyles";
+import { MajorRoute } from "./routes";
+import { ResetStyle } from "./styles/resetCss";
+import "react-toastify/dist/ReactToastify.css";
 
-const App = () => (
-  <>
-    <GlobalStyles />
-    <Router />
-  </>
-);
+const App = () => {
+  return (
+    <>
+      <ResetStyle />
+      <GlobalStyle />
+      <ToastContainer />
+      <MajorRoute />
+    </>
+  );
+};
 
 export default App;

@@ -1,20 +1,62 @@
-import { StyledShopPage } from './style';
-import CartModal from '../../components/CartModal';
-import Header from '../../components/Header';
-import ProductList from '../../components/ProductList';
+import { useContext, useEffect } from "react";
+import { ProductList } from "../../components/ProductList";
+import { CartContext } from "../../context/CartContext";
+import { StylesShop } from "./style";
+import { Header } from "../../components/Header";
+import { Cart } from "../../components/Cart";
+import { api } from "../../services/api";
 
-import { StyledContainer } from '../../styles/grid';
+interface iProduct {
+  id: number;
+  name: string;
+  category: string;
+  price: number;
+  img: string;
+  product: iProduct;
+}
 
-const ShopPage = () => (
-  <StyledShopPage>
-    <CartModal />
-    <Header />
-    <main>
-      <StyledContainer containerWidth={1300}>
-        <ProductList />
-      </StyledContainer>
-    </main>
-  </StyledShopPage>
-);
+export const ShopPage = () => {
+  const { products, filterProducts, cartModal, setProducts } =
+    useContext(CartContext);
 
-export default ShopPage;
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        const token = localStorage.getItem("@token") || "";
+        const { data } = await api.get<iProduct[]>("/products", {
+          headers: {
+            Authorization: `Bearer ${JSON.parse(token)}`,
+          },
+        });
+        setProducts(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getProducts();
+  }, []);
+
+  return (
+    <StylesShop>
+      {cartModal && <Cart />}
+      <Header />
+      <main className="container">
+        <ul>
+          {products &&
+            filterProducts?.map((product, index) => (
+              <ProductList
+                key={index}
+                img={product.img}
+                name={product.name}
+                price={product.price}
+                category={product.category}
+                product={product}
+                id={product.id}
+              />
+            ))}
+        </ul>
+      </main>
+    </StylesShop>
+  );
+};

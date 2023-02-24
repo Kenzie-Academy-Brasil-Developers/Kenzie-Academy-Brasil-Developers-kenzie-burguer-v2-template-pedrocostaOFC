@@ -1,34 +1,106 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { FormStyle } from "../../components/Form/style";
+import { Input } from "../../components/Input";
+import { LogoBurgue } from "../../components/LogoBurgue";
+import { RegisterStyle } from "./style";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContext";
+import { ButtonStyle } from "../../components/Button";
 
-import { StyledRegisterPage } from './style';
-import RegisterForm from '../../components/Form/RegisterForm';
-import IllustrationBox from '../../components/IllustrationBox';
+interface iRegisterData {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
 
-import { StyledContainer, StyledGridBox } from '../../styles/grid';
-import { StyledTitle } from '../../styles/typography';
+export const RegisterPage = () => {
+  const { registerLoading, registerUser } = useContext(UserContext);
 
-const RegisterPage = () => (
-    <StyledRegisterPage>
-      <StyledContainer>
-        <div className='flexGrid'>
-          <div className='left'>
-            <IllustrationBox />
-          </div>
-          <div className='right'>
-            <StyledGridBox className='formBox'>
-              <header>
-                <StyledTitle tag='h1' $fontSize='three'>
-                  Cadastro
-                </StyledTitle>
-                <Link to='/'>Retornar para o login</Link>
-              </header>
+  const formSchema = yup.object().shape({
+    name: yup.string().required("Você precisa colocar seu nome"),
+    email: yup
+      .string()
+      .required("É obrigatório fornecer um email")
+      .email("Coloque um email válido"),
+    password: yup
+      .string()
+      .required("É obrigatório colocar uma senha")
+      .min(6, "Senha tem que ter no mínimo 6 caracteres")
+      .matches(/[a-z]/, "Senha tem que conter uma letra")
+      .matches(/[A-Z]/, "Senha tem que conter uma letra maiúscula")
+      .matches(/[0-9]/, "Senha tem que conter um número"),
+    confirmPassword: yup
+      .string()
+      .required("Confirme sua senha")
+      .oneOf([yup.ref("password")], "Os campos de senha devem ser iguais"),
+  });
 
-              <RegisterForm />
-            </StyledGridBox>
-          </div>
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<iRegisterData>({
+    resolver: yupResolver(formSchema),
+  });
+
+  return (
+    <RegisterStyle className="container">
+      <FormStyle onSubmit={handleSubmit(registerUser)} noValidate>
+        <div>
+          <h2>Cadastro</h2>
+          <Link to="/">Voltar para o login</Link>
         </div>
-      </StyledContainer>
-    </StyledRegisterPage>
+        <Input
+          register={register("name")}
+          errors={errors.name}
+          type="text"
+          placeholder="Nome..."
+          disabled={registerLoading}
+          id="name"
+          label="Nome"
+        />
+        <Input
+          register={register("email")}
+          errors={errors.email}
+          type="email"
+          placeholder="Email.."
+          disabled={registerLoading}
+          id="email"
+          label="Email"
+        />
+        <Input
+          register={register("password")}
+          errors={errors.password}
+          type="password"
+          placeholder="Senha..."
+          disabled={registerLoading}
+          id="password"
+          label="Senha"
+        />
+        <Input
+          register={register("confirmPassword")}
+          errors={errors.confirmPassword}
+          type="password"
+          placeholder="Confirmar senha..."
+          disabled={registerLoading}
+          id="confirmPassword"
+          label="Confirmar senha"
+        />
+        <ButtonStyle
+          disabled={registerLoading}
+          type="submit"
+          width="full"
+          padding="big"
+          styledBtn="colorGrey"
+        >
+          {registerLoading ? "Cadastrando..." : "Cadastrar"}
+        </ButtonStyle>
+      </FormStyle>
+      <LogoBurgue />
+    </RegisterStyle>
   );
-
-export default RegisterPage;
+};
